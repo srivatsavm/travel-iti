@@ -29,14 +29,14 @@ import (
 	"github.com/openblockchain/obc-peer/openchain/chaincode/shim"
 )
 
-// SimpleChaincode example simple Chaincode implementation
-type SimpleChaincode struct {
+// TravelItiChaincode example simple Chaincode implementation
+type TravelItiChaincode struct {
 }
 
-var marbleIndexStr = "_marbleindex"				//name for the key/value that will store a list of all known marbles
+var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will store a list of all known travel itineraries
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 
-type Marble struct{
+type TravelIti struct{
 	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
 	Color string `json:"color"`
 	Size int `json:"size"`
@@ -46,7 +46,7 @@ type Marble struct{
 // ============================================================================================================================
 // Init - reset all the things
 // ============================================================================================================================
-func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var Aval int
 	var err error
 
@@ -79,7 +79,7 @@ func (t *SimpleChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte,
 // ============================================================================================================================
 // Run - Our entry point
 // ============================================================================================================================
-func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("run is running " + function)
 
 	// Handle different functions
@@ -89,8 +89,8 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 		return t.Delete(stub, args)
 	} else if function == "write" {											//writes a value to the chaincode state
 		return t.Write(stub, args)
-	} else if function == "init_marble" {									//create a new marble
-		return t.init_marble(stub, args)
+	} else if function == "init_marble" {									//create a new travelIti
+		return t.init_travelIti(stub, args)
 	} else if function == "set_user" {										//change owner of a marble
 		return t.set_user(stub, args)
 	}
@@ -102,7 +102,7 @@ func (t *SimpleChaincode) Run(stub *shim.ChaincodeStub, function string, args []
 // ============================================================================================================================
 // Delete - remove a key/value pair from state
 // ============================================================================================================================
-func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
@@ -114,35 +114,35 @@ func (t *SimpleChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byt
 	}
 
 	//srivatsav
-	//get the marble index
-	marblesAsBytes, err := stub.GetState(marbleIndexStr)
+	//get the travelIti index
+	travelItiAsBytes, err := stub.GetState(travelItiIndexStr)
 	if err != nil {
 		return nil, errors.New("Failed to get marble index")
 	}
-	var marbleIndex []string
-	json.Unmarshal(marblesAsBytes, &marbleIndex)								//un stringify it aka JSON.parse()
+	var travelItiIndex []string
+	json.Unmarshal(travelItiAsBytes, &travelItiIndex)								//un stringify it aka JSON.parse()
 	
 	//remove marble from index
-	for i,val := range marbleIndex{
+	for i,val := range travelItiIndex{
 		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + name)
 		if val == name{															//find the correct marble
-			fmt.Println("found marble")
-			marbleIndex = append(marbleIndex[:i], marbleIndex[i+1:]...)			//remove it
-			for x:= range marbleIndex{											//debug prints...
+			fmt.Println("found Travel Itinary")
+			travelItiIndex = append(travelItiIndex[:i], travelItiIndex[i+1:]...)			//remove it
+			for x:= range travelItiIndex{											//debug prints...
 				fmt.Println(string(x) + " - " + marbleIndex[x])
 			}
 			break
 		}
 	}
-	jsonAsBytes, _ := json.Marshal(marbleIndex)									//save new index
-	err = stub.PutState(marbleIndexStr, jsonAsBytes)
+	jsonAsBytes, _ := json.Marshal(travelItiIndex)									//save new index
+	err = stub.PutState(travelItiIndexStr, jsonAsBytes)
 	return nil, nil
 }
 
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
 // ============================================================================================================================
-func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	if function != "query" {
 		return nil, errors.New("Invalid query function name. Expecting \"query\"")
 	}
@@ -164,7 +164,7 @@ func (t *SimpleChaincode) Query(stub *shim.ChaincodeStub, function string, args 
 }
 
 func main() {
-	err := shim.Start(new(SimpleChaincode))
+	err := shim.Start(new(TravelItiChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
@@ -173,7 +173,7 @@ func main() {
 // ============================================================================================================================
 // Write - write variable into chaincode state
 // ============================================================================================================================
-func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var name, value string // Entities
 	var err error
 	fmt.Println("running write()")
@@ -192,9 +192,9 @@ func (t *SimpleChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte
 }
 
 // ============================================================================================================================
-// Init Marble - create a new marble, store into chaincode state
+// Init TravelIti - create a new Travel Itinerary, store into chaincode state
 // ============================================================================================================================
-func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 
 	//   0       1       2     3
@@ -203,7 +203,7 @@ func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) (
 		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
 
-	fmt.Println("- start init marble")
+	fmt.Println("- start init Travel Itinerary")
 	if len(args[0]) <= 0 {
 		return nil, errors.New("1st argument must be a non-empty string")
 	}
@@ -226,33 +226,33 @@ func (t *SimpleChaincode) init_marble(stub *shim.ChaincodeStub, args []string) (
 	user := strings.ToLower(args[3])
 
 	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "user": "` + user + `"}`
-	err = stub.PutState(args[0], []byte(str))								//store marble with id as key
+	err = stub.PutState(args[0], []byte(str))								//store travel Itinerary with id as key
 	if err != nil {
 		return nil, err
 	}
 		
-	//get the marble index
-	marblesAsBytes, err := stub.GetState(marbleIndexStr)
+	//get the Travel Itinerary index
+	travelItiAsBytes, err := stub.GetState(travelItiIndexStr)
 	if err != nil {
-		return nil, errors.New("Failed to get marble index")
+		return nil, errors.New("Failed to get travelIti index")
 	}
-	var marbleIndex []string
-	json.Unmarshal(marblesAsBytes, &marbleIndex)							//un stringify it aka JSON.parse()
+	var travelItiIndex []string
+	json.Unmarshal(travelItiAsBytes, &travelItiIndex)							//un stringify it aka JSON.parse()
 	
 	//append
-	marbleIndex = append(marbleIndex, args[0])								//add marble name to index list
-	fmt.Println("! marble index: ", marbleIndex)
-	jsonAsBytes, _ := json.Marshal(marbleIndex)
-	err = stub.PutState(marbleIndexStr, jsonAsBytes)						//store name of marble
+	travelItiIndex = append(travelItiIndex, args[0])								//add travelIti name to index list
+	fmt.Println("! travelIti index: ", travelItiIndex)
+	jsonAsBytes, _ := json.Marshal(travelItiIndex)
+	err = stub.PutState(travelItiIndexStr, jsonAsBytes)						//store name of travelIti
 
-	fmt.Println("- end init marble")
+	fmt.Println("- end init travelIti")
 	return nil, nil
 }
 
 // ============================================================================================================================
-// Set User Permission on Marble
+// Set User Permission on travelIti
 // ============================================================================================================================
-func (t *SimpleChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 	
 	//   0       1
@@ -267,8 +267,8 @@ func (t *SimpleChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]b
 	if err != nil {
 		return nil, errors.New("Failed to get thing")
 	}
-	res := Marble{}
-	json.Unmarshal(marbleAsBytes, &res)										//un stringify it aka JSON.parse()
+	res := travelIti{}
+	json.Unmarshal(travelItiAsBytes, &res)										//un stringify it aka JSON.parse()
 	res.User = args[1]														//change the user
 	
 	jsonAsBytes, _ := json.Marshal(res)
