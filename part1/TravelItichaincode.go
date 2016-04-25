@@ -29,8 +29,8 @@ import (
 	"github.com/openblockchain/obc-peer/openchain/chaincode/shim"
 )
 
-// SimplChaincode example simple Chaincode implementation
-type SimplChaincode struct {
+// TravelItiChaincode example simple Chaincode implementation
+type TravelItiChaincode struct {
 }
 
 var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will store a list of all known travel itineraries
@@ -46,7 +46,7 @@ type TravelIti struct{
 // ============================================================================================================================
 // Init - reset all the things
 // ============================================================================================================================
-func (t *SimplChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var Aval int
 	var err error
 
@@ -77,7 +77,7 @@ func (t *SimplChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, 
 // ============================================================================================================================
 // Run - Our entry point
 // ============================================================================================================================
-func (t *SimplChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("run is running " + function)
 
 	// Handle different functions
@@ -100,7 +100,7 @@ func (t *SimplChaincode) Run(stub *shim.ChaincodeStub, function string, args []s
 // ============================================================================================================================
 // Delete - remove a key/value pair from state
 // ============================================================================================================================
-func (t *SimplChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
@@ -140,7 +140,7 @@ func (t *SimplChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
 // ============================================================================================================================
-func (t *SimplChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	if function != "query" {
 		return nil, errors.New("Invalid query function name. Expecting \"query\"")
 	}
@@ -162,7 +162,7 @@ func (t *SimplChaincode) Query(stub *shim.ChaincodeStub, function string, args [
 }
 
 func main() {
-	err := shim.Start(new(SimplChaincode))
+	err := shim.Start(new(TravelItiChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
@@ -171,7 +171,7 @@ func main() {
 // ============================================================================================================================
 // Write - write variable into chaincode state
 // ============================================================================================================================
-func (t *SimplChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var name, value string // Entities
 	var err error
 	fmt.Println("running write()")
@@ -192,7 +192,7 @@ func (t *SimplChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte,
 // ============================================================================================================================
 // Init TravelIti - create a new Travel Itinerary, store into chaincode state
 // ============================================================================================================================
-func (t *SimplChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 
 	//   0       1       2     3
@@ -250,7 +250,7 @@ func (t *SimplChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string)
 // ============================================================================================================================
 // Set User Permission on travelIti
 // ============================================================================================================================
-func (t *SimplChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 	
 	//   0       1
