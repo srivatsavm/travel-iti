@@ -29,8 +29,8 @@ import (
 	"github.com/openblockchain/obc-peer/openchain/chaincode/shim"
 )
 
-// TravelItiChaincode example simple Chaincode implementation
-type TravelItiChaincode struct {
+// SimplChaincode example simple Chaincode implementation
+type SimplChaincode struct {
 }
 
 var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will store a list of all known travel itineraries
@@ -46,45 +46,38 @@ type TravelIti struct{
 // ============================================================================================================================
 // Init - reset all the things
 // ============================================================================================================================
-func (t *TravelItiChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimplChaincode) init(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var Aval int
 	var err error
 
-	fmt.Println("init -- 1 ")						//error
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-	fmt.Println("init -- 2 ")						//error
 	// Initialize the chaincode
 	Aval, err = strconv.Atoi(args[0])
 	if err != nil {
 		return nil, errors.New("Expecting integer value for asset holding")
 	}
-	fmt.Println("init -- 3 ")						//error
 	
 	// Write the state to the ledger
 	err = stub.PutState("abc", []byte(strconv.Itoa(Aval)))				//making a test var "abc", I find it handy to read/write to it right away to test the
-	fmt.Println("init -- 4 ")						//error
 	network
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("init -- 5 ")						//error
 	var empty []string
 	jsonAsBytes, _ := json.Marshal(empty)								//marshal an emtpy array of strings to clear the index
-	fmt.Println("init -- 6 ")						//error
 	err = stub.PutState(travelItiIndexStr, jsonAsBytes)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("init -- 7 ")						//error
 	return nil, nil
 }
 
 // ============================================================================================================================
 // Run - Our entry point
 // ============================================================================================================================
-func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimplChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	fmt.Println("run is running " + function)
 
 	// Handle different functions
@@ -107,7 +100,7 @@ func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args
 // ============================================================================================================================
 // Delete - remove a key/value pair from state
 // ============================================================================================================================
-func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimplChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
@@ -147,7 +140,7 @@ func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
 // ============================================================================================================================
-func (t *TravelItiChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
+func (t *SimplChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	if function != "query" {
 		return nil, errors.New("Invalid query function name. Expecting \"query\"")
 	}
@@ -169,7 +162,7 @@ func (t *TravelItiChaincode) Query(stub *shim.ChaincodeStub, function string, ar
 }
 
 func main() {
-	err := shim.Start(new(TravelItiChaincode))
+	err := shim.Start(new(SimplChaincode))
 	if err != nil {
 		fmt.Printf("Error starting Simple chaincode: %s", err)
 	}
@@ -178,7 +171,7 @@ func main() {
 // ============================================================================================================================
 // Write - write variable into chaincode state
 // ============================================================================================================================
-func (t *TravelItiChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimplChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var name, value string // Entities
 	var err error
 	fmt.Println("running write()")
@@ -199,7 +192,7 @@ func (t *TravelItiChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]b
 // ============================================================================================================================
 // Init TravelIti - create a new Travel Itinerary, store into chaincode state
 // ============================================================================================================================
-func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimplChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 
 	//   0       1       2     3
@@ -257,7 +250,7 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 // ============================================================================================================================
 // Set User Permission on travelIti
 // ============================================================================================================================
-func (t *TravelItiChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *SimplChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 	
 	//   0       1
