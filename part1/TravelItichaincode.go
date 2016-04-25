@@ -50,29 +50,34 @@ func (t *TravelItiChaincode) init(stub *shim.ChaincodeStub, args []string) ([]by
 	var Aval int
 	var err error
 
+	fmt.Println("init -- 1 ")						//error
 	if len(args) != 1 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
-
+	fmt.Println("init -- 2 ")						//error
 	// Initialize the chaincode
 	Aval, err = strconv.Atoi(args[0])
 	if err != nil {
 		return nil, errors.New("Expecting integer value for asset holding")
 	}
-
+	fmt.Println("init -- 3 ")						//error
+	
 	// Write the state to the ledger
-	err = stub.PutState("abc", []byte(strconv.Itoa(Aval)))				//making a test var "abc", I find it handy to read/write to it right away to test the network
+	err = stub.PutState("abc", []byte(strconv.Itoa(Aval)))				//making a test var "abc", I find it handy to read/write to it right away to test the
+	fmt.Println("init -- 4 ")						//error
+	network
 	if err != nil {
 		return nil, err
 	}
-	
+	fmt.Println("init -- 5 ")						//error
 	var empty []string
 	jsonAsBytes, _ := json.Marshal(empty)								//marshal an emtpy array of strings to clear the index
+	fmt.Println("init -- 6 ")						//error
 	err = stub.PutState(travelItiIndexStr, jsonAsBytes)
 	if err != nil {
 		return nil, err
 	}
-	
+	fmt.Println("init -- 7 ")						//error
 	return nil, nil
 }
 
