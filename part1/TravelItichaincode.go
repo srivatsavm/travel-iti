@@ -38,7 +38,7 @@ type TravelIti struct{
 	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
 	Color string `json:"color"`
 //	Size int `json:"size"`
-//	User string `json:"user"`
+	User string `json:"user"`
 	travelid int `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
@@ -228,7 +228,7 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 
 	//str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 
-	str := `{"name": "` + args[0] + `"  , "color": "` + color + `" , "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+	str := `{"name": "` + args[0] + `"  , "color": "` + color + `" , "user": "` + user + `" , "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 
 	
 
