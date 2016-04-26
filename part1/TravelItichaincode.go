@@ -1,22 +1,3 @@
-/*
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
-*/
-
 package main
 
 import (
@@ -34,13 +15,12 @@ type TravelItiChaincode struct {
 }
 
 var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will store a list of all known Travel Iti
-var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 
 type TravelIti struct{
-	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
-	Color string `json:"color"`
-	Size int `json:"size"`
-	User string `json:"user"`
+	traveId int `json:"travelid"`
+	balance int `json:"balance"`
+	travelstate string `json:"travelstate"`				//the fieldtags are needed to keep case from bouncing around
+	stateowner string `json:"stateowner"`
 }
 
 // ============================================================================================================================
@@ -85,19 +65,18 @@ func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args
 	// Handle different functions
 	if function == "init" {													//initialize the chaincode state, used as reset
 		return t.init(stub, args)
-	} else if function == "delete" {										//deletes an entity from its state
-		return t.Delete(stub, args)
 	} else if function == "write" {											//writes a value to the chaincode state
 		return t.Write(stub, args)
 	} else if function == "init_travelIti" {									//create a new travel Iti
 		return t.init_travelIti(stub, args)
-	} else if function == "set_user" {										//change owner of a travelIti
-		return t.set_user(stub, args)
+	} else if function == "progressTravel" {										//change owner of a travelIti
+		return t.progressTravel(stub, args)
 	}
 	fmt.Println("run did not find func: " + function)						//error
 
 	return nil, errors.New("Received unknown function invocation")
 }
+
 
 // ============================================================================================================================
 // Delete - remove a key/value pair from state
@@ -137,6 +116,7 @@ func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]
 	err = stub.PutState(travelItiIndexStr, jsonAsBytes)
 	return nil, nil
 }
+
 
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
@@ -196,8 +176,8 @@ func (t *TravelItiChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]b
 func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 
-	//   0       1       2     3
-	// "asdf", "blue", "35", "bob"
+	//   0            1         2           3
+	// "travel123", "100", "Inactive", "TravelAgent"
 	if len(args) != 4 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
@@ -216,15 +196,15 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 		return nil, errors.New("4th argument must be a non-empty string")
 	}
 	
-	size, err := strconv.Atoi(args[2])
+	balance, err := strconv.Atoi(args[1])
 	if err != nil {
-		return nil, errors.New("3rd argument must be a numeric string")
+		return nil, errors.New("2nd argument must be a numeric string")
 	}
 	
-	color := strings.ToLower(args[1])
-	user := strings.ToLower(args[3])
+	travelstate := strings.ToLower(args[2])
+	stateowner := strings.ToLower(args[3])
 
-	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "user": "` + user + `"}`
+	str := `{"name": "` + args[0] + `", "balance": "` + strconv.Itoa(balance) + `", "travelstate": ` + travelstate + `, "stateowner": "` + stateowner + `"}`
 	err = stub.PutState(args[0], []byte(str))								//store travelIti with id as key
 	if err != nil {
 		return nil, err
@@ -249,26 +229,28 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 }
 
 // ============================================================================================================================
-// Set User Permission on TravelIti
+// Progress Travel on TravelIti
 // ============================================================================================================================
-func (t *TravelItiChaincode) set_user(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
+func (t *TravelItiChaincode) progressTravel(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
 	var err error
 	
-	//   0       1
-	// "name", "bob"
-	if len(args) < 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2")
+	//   0           1        2           3
+	// "travel123, "10", "taxi_end", "SilverTaxi"
+	if len(args) < 4 {
+		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}
 	
-	fmt.Println("- start set user")
-	fmt.Println(args[0] + " - " + args[1])
+	fmt.Println("- start progress travel")
+	//fmt.Println(args[0] + " - " + args[1])
 	travelItiAsBytes, err := stub.GetState(args[0])
 	if err != nil {
 		return nil, errors.New("Failed to get thing")
 	}
 	res := TravelIti{}
 	json.Unmarshal(travelItiAsBytes, &res)										//un stringify it aka JSON.parse()
-	res.User = args[1]														//change the user
+	res.balance = args[1]		
+	res.travelstate = args[2]		
+	res.stateowner = args[3]		
 	
 	jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the travelIti with id as key
@@ -276,6 +258,6 @@ func (t *TravelItiChaincode) set_user(stub *shim.ChaincodeStub, args []string) (
 		return nil, err
 	}
 	
-	fmt.Println("- end set user")
+	fmt.Println("- end progress travel")
 	return nil, nil
 }
