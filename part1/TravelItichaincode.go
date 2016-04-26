@@ -13,8 +13,6 @@ import (
 type TravelItiChaincode struct {
 }
 
-var travelItiIndexStr = "_travelItiindex"				
-
 type TravelIti struct{}
 
 // ============================================================================================================================
@@ -22,13 +20,6 @@ type TravelIti struct{}
 // ============================================================================================================================
 func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
 	return nil, nil
-}
-
-// ============================================================================================================================
-// Query - read a variable from chaincode state - (aka read)
-// ============================================================================================================================
-func (t *TravelItiChaincode) Query(stub *shim.ChaincodeStub, function string, args []string) ([]byte, error) {
-	return nil, nil													//send it onward
 }
 
 func main() {
