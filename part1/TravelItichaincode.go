@@ -15,12 +15,7 @@ type TravelItiChaincode struct {
 
 var travelItiIndexStr = "_travelItiindex"				
 
-type TravelIti struct{
-	travelid string `json:"travelid"`
-	balance int `json:"balance"`
-	travelstate string `json:"travelstate"`				
-	stateowner string `json:"stateowner"`
-	}
+type TravelIti struct{}
 
 // ============================================================================================================================
 // Run - Our entry point
