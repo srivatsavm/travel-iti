@@ -18,7 +18,10 @@ var travelItiIndexStr = "_travelItiindex"
 var openTradesStr = "_opentrades"				
 
 type TravelIti struct{
-	traveId int `json:"travelid"`
+	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
+	Color string `json:"color"`
+	Size int `json:"size"`
+	User string `json:"user"`
 }
 
 // ============================================================================================================================
