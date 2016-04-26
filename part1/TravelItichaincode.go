@@ -271,7 +271,7 @@ func (t *TravelItiChaincode) next_travel(stub *shim.ChaincodeStub, args []string
 	}
 	res := TravelIti{}
 	json.Unmarshal(travelItiAsBytes, &res)										//un stringify it aka JSON.parse()
-	res.User = args[1]														//change the user
+	res.travelstate = args[1]														//change the user
 	
 	jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the travelIti with id as key
