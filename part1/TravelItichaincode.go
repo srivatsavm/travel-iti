@@ -222,7 +222,7 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 	travelstate := strings.ToLower(args[2])
 	stateowner := strings.ToLower(args[3])
 
-	str := `{"name": "` + args[0] + `", "balance": "` + balance + `", "travelstate": ` + travelstate + `, "stateowner": "` + stateowner + `"}`
+	str := `{"travelid": "` + args[0] + `", "balance": "` + balance + `", "travelstate": ` + travelstate + `, "stateowner": "` + stateowner + `"}`
 	err = stub.PutState(args[0], []byte(str))								//store travelIti with id as key
 	if err != nil {
 		return nil, err
