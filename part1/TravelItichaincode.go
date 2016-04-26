@@ -35,6 +35,10 @@ var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will 
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 
 type TravelIti struct{
+	Name string `json:"name"`					
+	Color string `json:"color"`
+	Size int `json:"size"`
+	User string `json:"user"`
 	traveId string `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
