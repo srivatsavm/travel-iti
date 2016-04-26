@@ -226,9 +226,9 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 	//color := strings.ToLower(args[1])
 	//user := strings.ToLower(args[3])
 
-	//str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+	str := `{"name": "` + args[0] + `", "color": "` + color + `", "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 
-	str := `{"name": "` + args[0] + `" ,  "color": "` + args[0] + `", "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+	//str := `{"name": "` + args[0] + `" ,  "color": "` + args[0] + `", "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 
 	
 
