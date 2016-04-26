@@ -18,11 +18,7 @@ var travelItiIndexStr = "_travelItiindex"
 var openTradesStr = "_opentrades"				
 
 type TravelIti struct{
-
 	traveId int `json:"travelid"`
-	balance int `json:"balance"`
-	travelstate string `json:"travelstate"`				//the fieldtags are needed to keep case from bouncing around
-	stateowner string `json:"stateowner"`
 }
 
 // ============================================================================================================================
