@@ -42,7 +42,7 @@ type TravelIti struct{
 	travelid int `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
-	stateowner string `json:"stateowner"`
+	//stateowner string `json:"stateowner"`
 	stateowner1 string `json:"stateowner1"`
 	}
 
@@ -227,7 +227,7 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 	color := strings.ToLower(args[1])
 	user := strings.ToLower(args[3])
 
-	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner1": "` + args[0] + `"}`
 
 	//str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","traveid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 	
