@@ -35,10 +35,6 @@ var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will 
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 
 type TravelIti struct{
-	Name string `json:"name"`
-//	Color string `json:"color"`
-//	Size int `json:"size"`
-//	User string `json:"user"`
 	travelid int `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
@@ -109,8 +105,8 @@ func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 	
-	name := args[0]
-	err := stub.DelState(name)													//remove the key from chaincode state
+	travelid := args[0]
+	err := stub.DelState(travelid)													//remove the key from chaincode state
 	if err != nil {
 		return nil, errors.New("Failed to delete state")
 	}
@@ -125,8 +121,8 @@ func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]
 	
 	//remove travelIti from index
 	for i,val := range travelItiIndex{
-		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + name)
-		if val == name{															//find the correct travelIti
+		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + travelid)
+		if val == travelid{															//find the correct travelIti
 			fmt.Println("found travelIti")
 			travelItiIndex = append(travelItiIndex[:i], travelItiIndex[i+1:]...)			//remove it
 			for x:= range travelItiIndex{											//debug prints...
@@ -147,17 +143,17 @@ func (t *TravelItiChaincode) Query(stub *shim.ChaincodeStub, function string, ar
 	if function != "query" {
 		return nil, errors.New("Invalid query function name. Expecting \"query\"")
 	}
-	var name, jsonResp string
+	var travelid, jsonResp string
 	var err error
 
 	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting name of the person to query")
+		return nil, errors.New("Incorrect number of arguments. Expecting travlid to query")
 	}
 
-	name = args[0]
-	valAsbytes, err := stub.GetState(name)									//get the var from chaincode state
+	travelid = args[0]
+	valAsbytes, err := stub.GetState(travelid)									//get the var from chaincode state
 	if err != nil {
-		jsonResp = "{\"Error\":\"Failed to get state for " + name + "\"}"
+		jsonResp = "{\"Error\":\"Failed to get state for " + travelid + "\"}"
 		return nil, errors.New(jsonResp)
 	}
 
@@ -175,17 +171,17 @@ func main() {
 // Write - write variable into chaincode state
 // ============================================================================================================================
 func (t *TravelItiChaincode) Write(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	var name, value string // Entities
+	var travelid, value string // Entities
 	var err error
 	fmt.Println("running write()")
 
 	if len(args) != 2 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 2. name of the variable and value to set")
+		return nil, errors.New("Incorrect number of arguments. Expecting 2. travelid of the variable and value to set")
 	}
 
-	name = args[0]															//rename for funsies
+	travelid = args[0]															//rename for funsies
 	value = args[1]
-	err = stub.PutState(name, []byte(value))								//write the variable into the chaincode state
+	err = stub.PutState(travelid, []byte(value))								//write the variable into the chaincode state
 	if err != nil {
 		return nil, err
 	}
@@ -223,14 +219,8 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 		return nil, errors.New("3rd argument must be a numeric string")
 	}
 	
-	//color := strings.ToLower(args[1])
-	//user := strings.ToLower(args[3])
 
-	//str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
-
-	str := `{"name": "` + args[0] + `" , "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
-
-	
+	str := `{"travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 
 	err = stub.PutState(args[0], []byte(str))								//store travelIti with id as key
 	if err != nil {
