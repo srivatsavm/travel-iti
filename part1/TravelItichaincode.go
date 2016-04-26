@@ -37,13 +37,12 @@ var openTradesStr = "_opentrades"				//name for the key/value that will store al
 type TravelIti struct{
 	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
 	Color string `json:"color"`
-	Size int `json:"size"`
+//	Size int `json:"size"`
 	User string `json:"user"`
 	travelid int `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
-	//stateowner string `json:"stateowner"`
-	stateowner1 string `json:"stateowner1"`
+	stateowner string `json:"stateowner"`
 	}
 
 // ============================================================================================================================
@@ -227,9 +226,10 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 	color := strings.ToLower(args[1])
 	user := strings.ToLower(args[3])
 
-	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner1": "` + args[0] + `"}`
+	//str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 
-	//str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(balance) + `, "user": "` + user + `","traveid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+	str := `{"name": "` + args[0] + `", "color": "` + color + `",  "user": "` + user + `","travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+
 	
 
 	err = stub.PutState(args[0], []byte(str))								//store travelIti with id as key
