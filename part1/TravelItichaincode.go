@@ -14,14 +14,15 @@ import (
 type TravelItiChaincode struct {
 }
 
-var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will store a list of all known Travel Iti
-var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
+var travelItiIndexStr = "_travelItiindex"				
+var openTradesStr = "_opentrades"				
 
 type TravelIti struct{
-	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
-	Color string `json:"color"`
-	Size int `json:"size"`
-	User string `json:"user"`
+
+	traveId int `json:"travelid"`
+	balance int `json:"balance"`
+	travelstate string `json:"travelstate"`				//the fieldtags are needed to keep case from bouncing around
+	stateowner string `json:"stateowner"`
 }
 
 // ============================================================================================================================
