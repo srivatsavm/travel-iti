@@ -37,8 +37,6 @@ var openTradesStr = "_opentrades"				//name for the key/value that will store al
 type TravelIti struct{
 	Name string `json:"name"`
 	travelmemo string `json:"travelmemo"`
-//	Size int `json:"size"`
-//	User string `json:"user"`
 	travelid int `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
@@ -223,15 +221,10 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 		return nil, errors.New("3rd argument must be a numeric string")
 	}
 	
-	travelstate := strings.ToLower(args[1])
-	//user := strings.ToLower(args[3])
+	travelmemo := strings.ToLower(args[5])
 
-	str := `{"name": "` + args[0] + `",   "travelmemo": "` + travelstate + `",  "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
+	str := `{"name": "` + args[0] + `",   "travelmemo": "` + travelmemo + `",  "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
 	
-	//str := `{"name": "` + args[0] + `" ,  "color": "` + args[0] + `", "travelid": "` + args[0] + `", "balance": ` + strconv.Itoa(balance) + `,"travelstate": ` + args[0] + `, "stateowner": "` + args[0] + `"}`
-
-	
-
 	err = stub.PutState(args[0], []byte(str))								//store travelIti with id as key
 	if err != nil {
 		return nil, err
