@@ -1,21 +1,3 @@
-/*
-Licensed to the Apache Software Foundation (ASF) under one
-or more contributor license agreements.  See the NOTICE file
-distributed with this work for additional information
-regarding copyright ownership.  The ASF licenses this file
-to you under the Apache License, Version 2.0 (the
-"License"); you may not use this file except in compliance
-with the License.  You may obtain a copy of the License at
-
-  http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing,
-software distributed under the License is distributed on an
-"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-KIND, either express or implied.  See the License for the
-specific language governing permissions and limitations
-under the License.
-*/
 
 package main
 
@@ -99,44 +81,6 @@ func (t *TravelItiChaincode) Run(stub *shim.ChaincodeStub, function string, args
 	return nil, errors.New("Received unknown function invocation")
 }
 
-// ============================================================================================================================
-// Delete - remove a key/value pair from state
-// ============================================================================================================================
-func (t *TravelItiChaincode) Delete(stub *shim.ChaincodeStub, args []string) ([]byte, error) {
-	if len(args) != 1 {
-		return nil, errors.New("Incorrect number of arguments. Expecting 1")
-	}
-	
-	name := args[0]
-	err := stub.DelState(name)													//remove the key from chaincode state
-	if err != nil {
-		return nil, errors.New("Failed to delete state")
-	}
-
-	//get the travelIti index
-	travelItiAsBytes, err := stub.GetState(travelItiIndexStr)
-	if err != nil {
-		return nil, errors.New("Failed to get travelIti index")
-	}
-	var travelItiIndex []string
-	json.Unmarshal(travelItiAsBytes, &travelItiIndex)								//un stringify it aka JSON.parse()
-	
-	//remove travelIti from index
-	for i,val := range travelItiIndex{
-		fmt.Println(strconv.Itoa(i) + " - looking at " + val + " for " + name)
-		if val == name{															//find the correct travelIti
-			fmt.Println("found travelIti")
-			travelItiIndex = append(travelItiIndex[:i], travelItiIndex[i+1:]...)			//remove it
-			for x:= range travelItiIndex{											//debug prints...
-				fmt.Println(string(x) + " - " + travelItiIndex[x])
-			}
-			break
-		}
-	}
-	jsonAsBytes, _ := json.Marshal(travelItiIndex)									//save new index
-	err = stub.PutState(travelItiIndexStr, jsonAsBytes)
-	return nil, nil
-}
 
 // ============================================================================================================================
 // Query - read a variable from chaincode state - (aka read)
