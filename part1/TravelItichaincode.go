@@ -36,7 +36,7 @@ var openTradesStr = "_opentrades"				//name for the key/value that will store al
 
 type TravelIti struct{
 	Name string `json:"name"`					//the fieldtags are needed to keep case from bouncing around
-//	Color string `json:"color"`
+	Color string `json:"color"`
 //	Size int `json:"size"`
 //	User string `json:"user"`
 	travelid int `json:"travelid"`
