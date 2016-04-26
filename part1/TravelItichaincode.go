@@ -35,11 +35,7 @@ var travelItiIndexStr = "_travelItiindex"				//name for the key/value that will 
 var openTradesStr = "_opentrades"				//name for the key/value that will store all open trades
 
 type TravelIti struct{
-	Name string `json:"name"`					
-	Color string `json:"color"`
-	Size int `json:"size"`
-	User string `json:"user"`
-	traveId int `json:"travelid"`
+	traveId string `json:"travelid"`
 	balance int `json:"balance"`
 	travelstate string `json:"travelstate"`				
 	stateowner string `json:"stateowner"`
@@ -218,15 +214,15 @@ func (t *TravelItiChaincode) init_travelIti(stub *shim.ChaincodeStub, args []str
 		return nil, errors.New("4th argument must be a non-empty string")
 	}
 	
-	size, err := strconv.Atoi(args[2])
+	balance, err := strconv.Atoi(args[1])
 	if err != nil {
 		return nil, errors.New("3rd argument must be a numeric string")
 	}
 	
-	color := strings.ToLower(args[1])
-	user := strings.ToLower(args[3])
+	travelstate := strings.ToLower(args[2])
+	stateowner := strings.ToLower(args[3])
 
-	str := `{"name": "` + args[0] + `", "color": "` + color + `", "size": ` + strconv.Itoa(size) + `, "user": "` + user + `"}`
+	str := `{"name": "` + args[0] + `", "balance": "` + balance + `", "travelstate": ` + travelstate + `, "stateowner": "` + stateowner + `"}`
 	err = stub.PutState(args[0], []byte(str))								//store travelIti with id as key
 	if err != nil {
 		return nil, err
@@ -270,7 +266,7 @@ func (t *TravelItiChaincode) next_travel(stub *shim.ChaincodeStub, args []string
 	}
 	res := TravelIti{}
 	json.Unmarshal(travelItiAsBytes, &res)										//un stringify it aka JSON.parse()
-	res.User = args[1]														//change the user
+	res.travelstate = args[1]														//change the user
 	
 	jsonAsBytes, _ := json.Marshal(res)
 	err = stub.PutState(args[0], jsonAsBytes)								//rewrite the travelIti with id as key
